@@ -248,8 +248,6 @@ BillDetailID bigint(20) unsigned not null auto_increment,
 Bill_Bill_ID bigint(20) unsigned not null,
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
 Total mediumint(15) unsigned,
-OverrideTotal mediumint(15) unsigned,
-OverrideReason varchar(45),
 primary key (BillDetailID),
 foreign key (Bill_Bill_ID)
 references Bill (Bill_ID),
@@ -265,4 +263,24 @@ foreign key (Promo_PromoID)
 references Promo (PromoID),
 foreign key (Bill_Bill_ID)
 references Bill (Bill_ID)
+);
+
+create table Override (
+OverrideID bigint(20) unsigned not null auto_increment,
+Amount mediumint(15) unsigned not null,
+Reason varchar(100) not null,
+Employee_EmployeeID bigint(20) unsigned not null,
+primary key (OverrideID),
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
+);
+
+create table BillOverride (
+Bill_Bill_ID bigint(20) unsigned not null,
+Override_OverrideID bigint(20) unsigned not null,
+primary key (Bill_Bill_ID, Override_OverrideID),
+foreign key (Bill_Bill_ID)
+references Bill (Bill_ID),
+foreign key (Override_OverrideID)
+references Override (OverrideID)
 );
