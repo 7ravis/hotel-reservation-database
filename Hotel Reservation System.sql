@@ -49,7 +49,7 @@ references RoomType (RoomTypeID)
 );
 
 create table Room (
-RoomID smallint(10) unsigned not null auto_increment,
+RoomID int(10) unsigned not null auto_increment,
 RoomNumber smallint(10) unsigned not null,
 Floor smallint(10) not null,
 OccupancyLimit smallint(10) unsigned not null,
@@ -69,10 +69,14 @@ primary key (AmenityID)
 );
 
 create table RoomAmenity (
-Room_RoomID smallint(10) unsigned not null,
+Room_RoomID int(10) unsigned not null,
 Amenity_AmenityID smallint(10) unsigned not null,
 AmenityQuantity tinyint(5) unsigned not null,
-primary key (Room_RoomID,Amenity_AmenityID)
+primary key (Room_RoomID,Amenity_AmenityID),
+foreign key (Room_RoomID)
+references Room (RoomID),
+foreign key (Amenity_AmenityID)
+references Amenity (AmenityID)
 );
 
 create table AmenityRate (
@@ -86,3 +90,168 @@ foreign key (Amenity_AmenityID)
 references Amenity (AmenityID)
 );
 
+create table Guest (
+GuestID bigint(20) unsigned not null auto_increment,
+FirstName varchar(45) not null,
+LastName varchar(45) not null,
+BirthDate date,
+Employee_EmployeeID bigint(20) unsigned,
+primary key (GuestID),
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
+);
+
+create table Email (
+EmailID bigint(20) unsigned not null auto_increment,
+EmailAddress varchar(100) not null,
+EmailType varchar(30),
+Guest_GuestID bigint(20) unsigned,
+Hotel_HotelID int unsigned,
+Employee_EmployeeID bigint(20) unsigned,
+primary key (EmailID),
+foreign key (Guest_GuestID)
+references Guest (GuestID),
+foreign key (Hotel_HotelID)
+references Hotel (HotelID),
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
+);
+
+create table Phone (
+PhoneID bigint(20) unsigned not null auto_increment,
+PhoneNumber varchar(20) not null,
+PhoneType varchar(15),
+Guest_GuestID bigint(20) unsigned,
+Hotel_HotelID int unsigned,
+Employee_EmployeeID bigint(20) unsigned,
+primary key (PhoneID),
+foreign key (Guest_GuestID)
+references Guest (GuestID),
+foreign key (Hotel_HotelID)
+references Hotel (HotelID),
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
+);
+
+create table Address (
+AddressID bigint(20) unsigned not null auto_increment,
+StreetAddress varchar(45) not null,
+City varchar(30) not null,
+State char(2) not null,
+Zipcode varchar(10) not null,
+Guest_GuestID bigint(20) unsigned,
+Hotel_HotelID int unsigned,
+Employee_EmployeeID bigint(20) unsigned,
+primary key (AddressID),
+foreign key (Guest_GuestID)
+references Guest (GuestID),
+foreign key (Hotel_HotelID)
+references Hotel (HotelID),
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
+);
+
+create table Reservation (
+ReservationID bigint(20) unsigned not null auto_increment,
+Guest_GuestID bigint(20) unsigned not null,
+primary key (ReservationID),
+foreign key (Guest_GuestID)
+references Guest (GuestID)
+);
+
+create table RoomReservation (
+RoomReservationID bigint(20) unsigned not null auto_increment,
+Room_RoomID int(10) unsigned not null,
+Reservation_ReservationID bigint(20) unsigned not null,
+StartDate date not null,
+EndDate date,
+primary key (RoomReservationID),
+foreign key (Room_RoomID)
+references Room (RoomID),
+foreign key (Reservation_ReservationID)
+references Reservation (ReservationID)
+);
+
+create table RoomReservationGuest (
+Guest_GuestID bigint(20) unsigned not null,
+RoomReservation_RoomReservationID bigint(20) unsigned not null,
+primary key (Guest_GuestID, RoomReservation_RoomReservationID),
+foreign key (Guest_GuestID)
+references Guest (GuestID),
+foreign key (RoomReservation_RoomReservationID)
+references RoomReservation (RoomReservationID)
+);
+
+create table Bill (
+Bill_ID bigint(20) unsigned not null auto_increment,
+BillTotal mediumint(10) unsigned,
+BillTax smallint(10) unsigned,
+Reservation_ReservationID bigint(20) unsigned not null,
+primary key (Bill_ID),
+foreign key (Reservation_ReservationID)
+references Reservation (ReservationID)
+);
+
+create table AddOn (
+AddOnID smallint(20) unsigned not null auto_increment,
+AddOnType varchar(30) not null,
+primary key (AddOnID)
+);
+
+create table AddOnRate (
+AddOnRateID bigint(20) unsigned not null auto_increment,
+Rate smallint(10) unsigned not null,
+StartDate date not null,
+EndDate date,
+AddOn_AddOnID smallint(20) unsigned not null,
+primary key (AddOnRateID),
+foreign key (AddOn_AddOnID)
+references AddOn (AddOnID)
+);
+
+create table RoomReservationAddOn (
+RoomReservationAddOnID bigint(20) unsigned not null auto_increment,
+RoomReservation_RoomReservationID bigint(20) unsigned not null,
+AddOn_AddOnID smallint(20) unsigned not null,
+primary key (RoomReservationAddOnID),
+foreign key (RoomReservation_RoomReservationID)
+references RoomReservation (RoomReservationID),
+foreign key (AddOn_AddOnID)
+references AddOn (AddOnID)
+);
+
+create table Promo (
+PromoID bigint(20) unsigned not null auto_increment,
+PromoCode varchar(20) not null,
+DollarDiscount smallint(10) unsigned,
+PercentDiscount tinyint(10) unsigned,
+StartDate date not null,
+EndDate date,
+RoomType_RoomTypeID smallint(10) unsigned,
+Amenity_AmenityID smallint(10) unsigned,
+AddOn_AddOnID smallint(20) unsigned,
+primary key (PromoID),
+foreign key (RoomType_RoomTypeID)
+references RoomType (RoomTypeID),
+foreign key (Amenity_AmenityID)
+references Amenity (AmenityID),
+foreign key (AddOn_AddOnID)
+references AddOn (AddOnID)
+);
+
+create table BillDetail (
+BillDetailID bigint(20) unsigned not null auto_increment,
+Bill_Bill_ID bigint(20) unsigned not null,
+RoomReservation_RoomReservationID bigint(20) unsigned not null,
+Promo_PromoID bigint(20) unsigned,
+Total mediumint(15) unsigned,
+OverrideTotal mediumint(15) unsigned,
+OverrideReason varchar(45),
+primary key (BillDetailID),
+foreign key (Bill_Bill_ID)
+references Bill (Bill_ID),
+foreign key (RoomReservation_RoomReservationID)
+references RoomReservation (RoomReservationID),
+foreign key (Promo_PromoID)
+references Promo (PromoID)
+);
