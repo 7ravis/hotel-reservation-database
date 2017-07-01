@@ -26,9 +26,13 @@ primary key (EmployeeID)
 );
 
 create table HotelEmployee (
-HotelID int unsigned not null,
-EmployeeID bigint(20) unsigned not null,
-primary key (HotelID,EmployeeID)
+Hotel_HotelID int unsigned not null,
+Employee_EmployeeID bigint(20) unsigned not null,
+primary key (Hotel_HotelID, Employee_EmployeeID),
+foreign key (Hotel_HotelID)
+references Hotel (HotelID),
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
 );
 
 create table RoomType (
@@ -72,7 +76,7 @@ create table RoomAmenity (
 Room_RoomID int(10) unsigned not null,
 Amenity_AmenityID smallint(10) unsigned not null,
 AmenityQuantity tinyint(5) unsigned not null,
-primary key (Room_RoomID,Amenity_AmenityID),
+primary key (Room_RoomID, Amenity_AmenityID),
 foreign key (Room_RoomID)
 references Room (RoomID),
 foreign key (Amenity_AmenityID)
@@ -165,7 +169,7 @@ Room_RoomID int(10) unsigned not null,
 Reservation_ReservationID bigint(20) unsigned not null,
 StartDate date not null,
 EndDate date,
-primary key (RoomReservationID),
+primary key (RoomReservationID), -- this bridge table uses a single primary key for simplicity since it is used as a foreign key in various tables
 foreign key (Room_RoomID)
 references Room (RoomID),
 foreign key (Reservation_ReservationID)
@@ -210,7 +214,7 @@ references AddOn (AddOnID)
 );
 
 create table RoomReservationAddOn (
-RoomReservationAddOnID bigint(20) unsigned not null auto_increment,
+RoomReservationAddOnID bigint(20) unsigned not null auto_increment,  -- this bridge table does not have a composite key because it allows multiple add-ons of the same type for the same room
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
 AddOn_AddOnID smallint(20) unsigned not null,
 primary key (RoomReservationAddOnID),
@@ -243,7 +247,6 @@ create table BillDetail (
 BillDetailID bigint(20) unsigned not null auto_increment,
 Bill_Bill_ID bigint(20) unsigned not null,
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
-Promo_PromoID bigint(20) unsigned,
 Total mediumint(15) unsigned,
 OverrideTotal mediumint(15) unsigned,
 OverrideReason varchar(45),
@@ -251,7 +254,15 @@ primary key (BillDetailID),
 foreign key (Bill_Bill_ID)
 references Bill (Bill_ID),
 foreign key (RoomReservation_RoomReservationID)
-references RoomReservation (RoomReservationID),
+references RoomReservation (RoomReservationID)
+);
+
+create table BillPromo (
+Promo_PromoID bigint(20) unsigned not null,
+Bill_Bill_ID bigint(20) unsigned not null,
+primary key (Promo_PromoID, Bill_Bill_ID),
 foreign key (Promo_PromoID)
-references Promo (PromoID)
+references Promo (PromoID),
+foreign key (Bill_Bill_ID)
+references Bill (Bill_ID)
 );
