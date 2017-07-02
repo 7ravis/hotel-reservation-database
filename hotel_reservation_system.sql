@@ -192,6 +192,8 @@ references AddressType (AddressTypeID)
 create table Reservation (
 ReservationID bigint(20) unsigned not null auto_increment,
 Guest_GuestID bigint(20) unsigned not null,
+TotalBeforeTax mediumint(10) unsigned,
+Tax smallint(10) unsigned,
 primary key (ReservationID),
 foreign key (Guest_GuestID)
 references Guest (GuestID)
@@ -218,16 +220,6 @@ foreign key (Guest_GuestID)
 references Guest (GuestID),
 foreign key (RoomReservation_RoomReservationID)
 references RoomReservation (RoomReservationID)
-);
-
-create table Bill (
-Bill_ID bigint(20) unsigned not null auto_increment,
-TotalBeforeTax mediumint(10) unsigned,
-Tax smallint(10) unsigned,
-Reservation_ReservationID bigint(20) unsigned not null,
-primary key (Bill_ID),
-foreign key (Reservation_ReservationID)
-references Reservation (ReservationID)
 );
 
 create table AddOn (
@@ -278,30 +270,30 @@ foreign key (AddOn_AddOnID)
 references AddOn (AddOnID)
 );
 
-create table BillDetail (
-BillDetailID bigint(20) unsigned not null auto_increment,
-Bill_Bill_ID bigint(20) unsigned not null,
+create table ReservationDetail (
+ReservationDetailID bigint(20) unsigned not null auto_increment,
+Reservation_ReservationID bigint(20) unsigned not null,
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
 RoomReservationAddOn_RoomReservationAddOnID bigint(20) unsigned,
 Description varchar(45),
 Rate mediumint(15) unsigned not null,
-primary key (BillDetailID),
-foreign key (Bill_Bill_ID)
-references Bill (Bill_ID),
+primary key (ReservationDetailID),
+foreign key (Reservation_ReservationID)
+references Reservation (ReservationID),
 foreign key (RoomReservation_RoomReservationID)
 references RoomReservation (RoomReservationID),
 foreign key (RoomReservationAddOn_RoomReservationAddOnID)
 references RoomReservationAddOn (RoomReservationAddOnID)
 );
 
-create table BillPromo (
+create table ReservationPromo (
 Promo_PromoID bigint(20) unsigned not null,
-Bill_Bill_ID bigint(20) unsigned not null,
-primary key (Promo_PromoID, Bill_Bill_ID),
+Reservation_ReservationID bigint(20) unsigned not null,
+primary key (Promo_PromoID, Reservation_ReservationID),
 foreign key (Promo_PromoID)
 references Promo (PromoID),
-foreign key (Bill_Bill_ID)
-references Bill (Bill_ID)
+foreign key (Reservation_ReservationID)
+references Reservation (ReservationID)
 );
 
 create table Override (
@@ -314,12 +306,12 @@ foreign key (Employee_EmployeeID)
 references Employee (EmployeeID)
 );
 
-create table BillOverride (
-Bill_Bill_ID bigint(20) unsigned not null,
+create table ReservationOverride (
+Reservation_ReservationID bigint(20) unsigned not null,
 Override_OverrideID bigint(20) unsigned not null,
-primary key (Bill_Bill_ID, Override_OverrideID),
-foreign key (Bill_Bill_ID)
-references Bill (Bill_ID),
+primary key (Reservation_ReservationID, Override_OverrideID),
+foreign key (Reservation_ReservationID)
+references Reservation (ReservationID),
 foreign key (Override_OverrideID)
 references Override (OverrideID)
 );
