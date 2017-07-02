@@ -227,6 +227,7 @@ references AddOn (AddOnID)
 create table Promo (
 PromoID bigint(20) unsigned not null auto_increment,
 PromoCode varchar(20) not null,
+Description varchar(45) not null,
 DollarDiscount smallint(10) unsigned,
 PercentDiscount tinyint(10) unsigned,
 StartDate date not null,
