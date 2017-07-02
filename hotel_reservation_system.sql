@@ -105,10 +105,16 @@ foreign key (Employee_EmployeeID)
 references Employee (EmployeeID)
 );
 
+create table EmailType (
+EmailTypeID tinyint(10) unsigned not null auto_increment,
+Type varchar(30) not null,
+primary key (EmailTypeID)
+);
+
 create table Email (
 EmailID bigint(20) unsigned not null auto_increment,
 EmailAddress varchar(100) not null,
-EmailType varchar(30),
+EmailType_EmailTypeID tinyint(10) unsigned,
 Guest_GuestID bigint(20) unsigned,
 Hotel_HotelID mediumint(10) unsigned,
 Employee_EmployeeID bigint(20) unsigned,
@@ -118,13 +124,21 @@ references Guest (GuestID),
 foreign key (Hotel_HotelID)
 references Hotel (HotelID),
 foreign key (Employee_EmployeeID)
-references Employee (EmployeeID)
+references Employee (EmployeeID),
+foreign key (EmailType_EmailTypeID)
+references EmailType (EmailTypeID)
+);
+
+create table PhoneType (
+PhoneTypeID tinyint(10) unsigned not null auto_increment,
+Type varchar(30) not null,
+primary key (PhoneTypeID)
 );
 
 create table Phone (
 PhoneID bigint(20) unsigned not null auto_increment,
+PhoneType_PhoneTypeID tinyint(10) unsigned,
 PhoneNumber varchar(20) not null,
-PhoneType varchar(15),
 Guest_GuestID bigint(20) unsigned,
 Hotel_HotelID mediumint(10) unsigned,
 Employee_EmployeeID bigint(20) unsigned,
@@ -134,7 +148,9 @@ references Guest (GuestID),
 foreign key (Hotel_HotelID)
 references Hotel (HotelID),
 foreign key (Employee_EmployeeID)
-references Employee (EmployeeID)
+references Employee (EmployeeID),
+foreign key (PhoneType_PhoneTypeID)
+references PhoneType (PhoneTypeID)
 );
 
 create table CityZip (
@@ -146,8 +162,15 @@ primary key (City, State, Zipcode),
 unique key (CityZipID)
 );
 
+create table AddressType (
+AddressTypeID tinyint(10) unsigned not null auto_increment,
+Type varchar(30) not null,
+primary key (AddressTypeID)
+);
+
 create table Address (
 AddressID bigint(20) unsigned not null auto_increment,
+AddressType_AddressTypeID tinyint(10) unsigned,
 StreetAddress varchar(45) not null,
 CityZip_CityZipID mediumint(20) unsigned not null,
 Guest_GuestID bigint(20) unsigned,
@@ -161,7 +184,9 @@ references Hotel (HotelID),
 foreign key (Employee_EmployeeID)
 references Employee (EmployeeID),
 foreign key (CityZip_CityZipID)
-references CityZip (CityZipID)
+references CityZip (CityZipID),
+foreign key (AddressType_AddressTypeID)
+references AddressType (AddressTypeID)
 );
 
 create table Reservation (
