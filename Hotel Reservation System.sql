@@ -248,12 +248,16 @@ create table BillDetail (
 BillDetailID bigint(20) unsigned not null auto_increment,
 Bill_Bill_ID bigint(20) unsigned not null,
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
-Total mediumint(15) unsigned,
+RoomReservationAddOn_RoomReservationAddOnID bigint(20) unsigned,
+Description varchar(45),
+Total mediumint(15) unsigned not null,
 primary key (BillDetailID),
 foreign key (Bill_Bill_ID)
 references Bill (Bill_ID),
 foreign key (RoomReservation_RoomReservationID)
-references RoomReservation (RoomReservationID)
+references RoomReservation (RoomReservationID),
+foreign key (RoomReservationAddOn_RoomReservationAddOnID)
+references RoomReservationAddOn (RoomReservationAddOnID)
 );
 
 create table BillPromo (
@@ -268,7 +272,7 @@ references Bill (Bill_ID)
 
 create table Override (
 OverrideID bigint(20) unsigned not null auto_increment,
-Amount mediumint(15) unsigned not null,
+Amount mediumint(15) not null,
 Reason varchar(100) not null,
 Employee_EmployeeID bigint(20) unsigned not null,
 primary key (OverrideID),
