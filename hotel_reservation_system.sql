@@ -137,12 +137,19 @@ foreign key (Employee_EmployeeID)
 references Employee (EmployeeID)
 );
 
+create table CityZip (
+CityZipID mediumint(20) unsigned not null auto_increment,
+City varchar(45) not null,
+State char(2) not null,
+Zipcode varchar(10) not null,
+primary key (City, State, Zipcode),
+unique key (CityZipID)
+);
+
 create table Address (
 AddressID bigint(20) unsigned not null auto_increment,
 StreetAddress varchar(45) not null,
-City varchar(30) not null,
-State char(2) not null,
-Zipcode varchar(10) not null,
+CityZip_CityZipID mediumint(20) unsigned not null,
 Guest_GuestID bigint(20) unsigned,
 Hotel_HotelID mediumint(10) unsigned,
 Employee_EmployeeID bigint(20) unsigned,
@@ -152,7 +159,9 @@ references Guest (GuestID),
 foreign key (Hotel_HotelID)
 references Hotel (HotelID),
 foreign key (Employee_EmployeeID)
-references Employee (EmployeeID)
+references Employee (EmployeeID),
+foreign key (CityZip_CityZipID)
+references CityZip (CityZipID)
 );
 
 create table Reservation (
@@ -188,8 +197,8 @@ references RoomReservation (RoomReservationID)
 
 create table Bill (
 Bill_ID bigint(20) unsigned not null auto_increment,
-BillTotal mediumint(10) unsigned,
-BillTax smallint(10) unsigned,
+TotalBeforeTax mediumint(10) unsigned,
+Tax smallint(10) unsigned,
 Reservation_ReservationID bigint(20) unsigned not null,
 primary key (Bill_ID),
 foreign key (Reservation_ReservationID)
@@ -250,7 +259,7 @@ Bill_Bill_ID bigint(20) unsigned not null,
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
 RoomReservationAddOn_RoomReservationAddOnID bigint(20) unsigned,
 Description varchar(45),
-Total mediumint(15) unsigned not null,
+Rate mediumint(15) unsigned not null,
 primary key (BillDetailID),
 foreign key (Bill_Bill_ID)
 references Bill (Bill_ID),
