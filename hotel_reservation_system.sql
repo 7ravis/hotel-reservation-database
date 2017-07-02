@@ -5,14 +5,14 @@ create database HotelReservation;
 use HotelReservation;
 
 create table Brand (
-BrandID int unsigned not null auto_increment,
+BrandID smallint(10) unsigned not null auto_increment,
 BrandName varchar(45) not null,
 primary key (BrandID)
 );
 
 create table Hotel (
-HotelID int unsigned not null auto_increment,
-Brand_BrandID int unsigned not null,
+HotelID mediumint(10) unsigned not null auto_increment,
+Brand_BrandID smallint(10) unsigned not null,
 primary key (HotelID),
 foreign key (Brand_BrandID)
 references Brand (BrandID)
@@ -26,7 +26,7 @@ primary key (EmployeeID)
 );
 
 create table HotelEmployee (
-Hotel_HotelID int unsigned not null,
+Hotel_HotelID mediumint(10) unsigned not null,
 Employee_EmployeeID bigint(20) unsigned not null,
 primary key (Hotel_HotelID, Employee_EmployeeID),
 foreign key (Hotel_HotelID)
@@ -58,7 +58,7 @@ RoomNumber smallint(10) unsigned not null,
 Floor smallint(10) not null,
 OccupancyLimit smallint(10) unsigned not null,
 RoomType_RoomTypeID smallint(10) unsigned not null,
-Hotel_HotelID int unsigned not null,
+Hotel_HotelID mediumint(10) unsigned not null,
 primary key (RoomID),
 foreign key (RoomType_RoomTypeID)
 references RoomType (RoomTypeID),
@@ -110,7 +110,7 @@ EmailID bigint(20) unsigned not null auto_increment,
 EmailAddress varchar(100) not null,
 EmailType varchar(30),
 Guest_GuestID bigint(20) unsigned,
-Hotel_HotelID int unsigned,
+Hotel_HotelID mediumint(10) unsigned,
 Employee_EmployeeID bigint(20) unsigned,
 primary key (EmailID),
 foreign key (Guest_GuestID)
@@ -126,7 +126,7 @@ PhoneID bigint(20) unsigned not null auto_increment,
 PhoneNumber varchar(20) not null,
 PhoneType varchar(15),
 Guest_GuestID bigint(20) unsigned,
-Hotel_HotelID int unsigned,
+Hotel_HotelID mediumint(10) unsigned,
 Employee_EmployeeID bigint(20) unsigned,
 primary key (PhoneID),
 foreign key (Guest_GuestID)
@@ -144,7 +144,7 @@ City varchar(30) not null,
 State char(2) not null,
 Zipcode varchar(10) not null,
 Guest_GuestID bigint(20) unsigned,
-Hotel_HotelID int unsigned,
+Hotel_HotelID mediumint(10) unsigned,
 Employee_EmployeeID bigint(20) unsigned,
 primary key (AddressID),
 foreign key (Guest_GuestID)
