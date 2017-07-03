@@ -298,22 +298,15 @@ references Reservation (ReservationID)
 
 create table Override (
 OverrideID bigint(20) unsigned not null auto_increment,
+Reservation_ReservationID bigint(20) unsigned not null,
 Amount mediumint(15) not null,
 Reason varchar(100) not null,
 Employee_EmployeeID bigint(20) unsigned not null,
 primary key (OverrideID),
-foreign key (Employee_EmployeeID)
-references Employee (EmployeeID)
-);
-
-create table ReservationOverride (
-Reservation_ReservationID bigint(20) unsigned not null,
-Override_OverrideID bigint(20) unsigned not null,
-primary key (Reservation_ReservationID, Override_OverrideID),
 foreign key (Reservation_ReservationID)
 references Reservation (ReservationID),
-foreign key (Override_OverrideID)
-references Override (OverrideID)
+foreign key (Employee_EmployeeID)
+references Employee (EmployeeID)
 );
 
 -- TRIGGERS THAT REQUIRE A BILL DETAIL TO RELATE TO EITHER A ROOM OR AN ADD ON
