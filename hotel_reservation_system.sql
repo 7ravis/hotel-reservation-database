@@ -315,3 +315,48 @@ references Reservation (ReservationID),
 foreign key (Override_OverrideID)
 references Override (OverrideID)
 );
+
+-- TRIGGERS THAT REQUIRE A BILL DETAIL TO RELATE TO EITHER A ROOM OR AN ADD ON
+DELIMITER //
+
+create trigger ReservationDetailInsertTrigger1
+before insert on ReservationDetail 
+for each row
+begin
+IF (new.RoomReservation_RoomReservationID is null AND new.RoomReservationAddOn_RoomReservationAddOnID is null) THEN 
+	signal sqlstate '45000' 
+	set message_text = 'RoomReservationID and RoomReservationAddOnID cannot both be null';
+end if;
+end//
+
+create trigger ReservationDetailUpdateTrigger1
+before update on ReservationDetail 
+for each row
+begin
+IF (new.RoomReservation_RoomReservationID is null AND new.RoomReservationAddOn_RoomReservationAddOnID is null) THEN 
+	signal sqlstate '45000' 
+	set message_text = 'RoomReservationID and RoomReservationAddOnID cannot both be null';
+end if;
+end//
+
+create trigger ReservationDetailInsertTrigger2
+before insert on ReservationDetail 
+for each row
+begin
+IF (new.RoomReservation_RoomReservationID is not null AND new.RoomReservationAddOn_RoomReservationAddOnID is not null) THEN 
+	signal sqlstate '45000' 
+	set message_text = 'RoomReservationID and RoomReservationAddOnID cannot both contain data';
+end if;
+end//
+
+create trigger ReservationDetailUpdateTrigger2
+before update on ReservationDetail 
+for each row
+begin
+IF (new.RoomReservation_RoomReservationID is not null AND new.RoomReservationAddOn_RoomReservationAddOnID is not null) THEN 
+	signal sqlstate '45000' 
+	set message_text = 'RoomReservationID and RoomReservationAddOnID cannot both contain data';
+end if;
+end//
+
+DELIMITER ;
