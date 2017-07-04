@@ -43,7 +43,7 @@ primary key (RoomTypeID)
 
 create table RoomRate (
 RoomRateID bigint(20) unsigned not null auto_increment,
-Rate smallint(10) unsigned not null,
+Rate decimal(12,2) unsigned not null,
 StartDate date not null,
 EndDate date,
 RoomType_RoomTypeID smallint(10) unsigned not null,
@@ -85,7 +85,7 @@ references Amenity (AmenityID)
 
 create table AmenityRate (
 AmenityRateID bigint(20) unsigned not null auto_increment,
-Rate smallint(10) unsigned not null,
+Rate decimal(12,2) unsigned not null,
 StartDate date not null,
 EndDate date,
 Amenity_AmenityID smallint(10) unsigned not null,
@@ -192,8 +192,8 @@ references AddressType (AddressTypeID)
 create table Reservation (
 ReservationID bigint(20) unsigned not null auto_increment,
 Guest_GuestID bigint(20) unsigned not null,
-TotalBeforeTax mediumint(10) unsigned,
-Tax smallint(10) unsigned,
+TotalBeforeTax decimal(12,2) unsigned,
+Tax decimal(12,2) unsigned,
 primary key (ReservationID),
 foreign key (Guest_GuestID)
 references Guest (GuestID)
@@ -230,7 +230,7 @@ primary key (AddOnID)
 
 create table AddOnRate (
 AddOnRateID bigint(20) unsigned not null auto_increment,
-Rate smallint(10) unsigned not null,
+Rate decimal(12,2) unsigned not null,
 StartDate date not null,
 EndDate date,
 AddOn_AddOnID smallint(20) unsigned not null,
@@ -276,7 +276,7 @@ Reservation_ReservationID bigint(20) unsigned not null,
 RoomReservation_RoomReservationID bigint(20) unsigned not null,
 RoomReservationAddOn_RoomReservationAddOnID bigint(20) unsigned,
 Description varchar(45),
-Rate mediumint(15) unsigned not null,
+Rate decimal(12,2) unsigned not null,
 primary key (ReservationDetailID),
 foreign key (Reservation_ReservationID)
 references Reservation (ReservationID),
